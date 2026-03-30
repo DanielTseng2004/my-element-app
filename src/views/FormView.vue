@@ -82,9 +82,10 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { useHistoryStore } from "../stores/history";
+const historyStore = useHistoryStore();
 const router = useRouter();
 const formRef = ref(null);
-
 const form = reactive({
   name: "",
   email: "",
@@ -103,30 +104,27 @@ const rules = {
 };
 
 const submitForm = () => {
-  if (!formRef.value) return;
   formRef.value.validate((valid) => {
     if (valid) {
-      // --- 新增儲存邏輯 ---
       const newUser = {
-        id: Date.now(), // 唯一 ID
+        id: Date.now(),
         type: "user",
         userName: form.name,
         userEmail: form.email,
         userGender: form.gender,
         userDesc: form.desc,
-        createTime: new Date().toLocaleString(),
+        createTime: new Date().toISOString(),
       };
 
-      const history = JSON.parse(localStorage.getItem("sys_history") || "[]");
-      history.push(newUser);
-      localStorage.setItem("sys_history", JSON.stringify(history));
-      // ------------------
+      // ✅ 統一呼叫 Action
+      historyStore.addRecord(newUser);
 
-      ElMessage.success("送出成功，正在跳轉...");
-      router.push({ path: "/about", query: newUser });
+      ElMessage.success("註冊成功");
+      router.push("/about");
     }
   });
 };
+
 const resetForm = () => {
   if (!formRef.value) return;
   formRef.value.resetFields();

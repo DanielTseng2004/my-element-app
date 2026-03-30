@@ -121,7 +121,8 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-
+import { useHistoryStore } from "../stores/history";
+const historyStore = useHistoryStore();
 const router = useRouter();
 const deviceFormRef = ref(null);
 
@@ -143,21 +144,20 @@ const submitForm = () => {
     if (valid) {
       const newRecord = {
         id: Date.now(),
-        type: "device", // 用於 AboutView 篩選
+        type: "device",
         deviceName: deviceForm.id,
         deviceType: deviceForm.type,
         urgency: deviceForm.urgency,
         deviceDesc: deviceForm.desc,
-        createTime: new Date().toLocaleString(),
+        // 建議統一使用 ISO 格式方便排序
+        createTime: new Date().toISOString(),
       };
 
-      // 儲存到 LocalStorage
-      const history = JSON.parse(localStorage.getItem("sys_history") || "[]");
-      history.push(newRecord);
-      localStorage.setItem("sys_history", JSON.stringify(history));
+      // ✅ 替換掉原本的 localStorage.setItem 邏輯
+      historyStore.addRecord(newRecord);
 
       ElMessage.success("報修申請已送出");
-      router.push({ path: "/about", query: newRecord });
+      router.push("/about");
     }
   });
 };

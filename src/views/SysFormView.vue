@@ -83,19 +83,16 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { useHistoryStore } from "../stores/history";
+const historyStore = useHistoryStore();
 const router = useRouter();
-
-// 1. 定義表單實例引用
 const formRef = ref(null);
-
-// 2. 統一管理表單資料 (這是最核心的修正)
 const formData = reactive({
   name: "",
   time: "",
   problem: "",
 });
 
-// 3. 定義驗證規則
 const rules = {
   name: [{ required: true, message: "系統名稱必填", trigger: "blur" }],
   time: [{ required: true, message: "時間必填", trigger: "blur" }],
@@ -103,29 +100,26 @@ const rules = {
 };
 
 const submitForm = () => {
-  if (!formRef.value) return;
   formRef.value.validate((valid) => {
     if (valid) {
-      // --- 新增儲存邏輯 ---
       const newSys = {
         id: Date.now(),
         type: "system",
         sysName: formData.name,
         sysProblem: formData.problem,
         sysTime: formData.time,
-        createTime: new Date().toLocaleString(),
+        createTime: new Date().toISOString(),
       };
 
-      const history = JSON.parse(localStorage.getItem("sys_history") || "[]");
-      history.push(newSys);
-      localStorage.setItem("sys_history", JSON.stringify(history));
-      // ------------------
+      // ✅ 統一呼叫 Action
+      historyStore.addRecord(newSys);
 
-      ElMessage.success("送出成功，正在跳轉...");
-      router.push({ path: "/about", query: newSys });
+      ElMessage.success("送出成功");
+      router.push("/about");
     }
   });
 };
+
 const resetForm = () => {
   if (!formRef.value) return;
   formRef.value.resetFields();

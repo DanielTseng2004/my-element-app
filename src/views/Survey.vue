@@ -72,8 +72,10 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { useHistoryStore } from "../stores/history";
 const router = useRouter();
 const formRef = ref(null);
+const historyStore = useHistoryStore();
 
 const form = reactive({
   surveyTitle: "",
@@ -88,23 +90,20 @@ const rules = {
 };
 
 const submitForm = () => {
-  if (!formRef.value) return;
   formRef.value.validate((valid) => {
     if (valid) {
       const newSurvey = {
         id: Date.now(),
         type: "survey",
-        surveyTitle: form.surveyTitle,
-        rating: form.rating,
-        feedback: form.feedback,
+        // ... 其他欄位
         createTime: new Date().toISOString(),
       };
 
-      const history = JSON.parse(localStorage.getItem("sys_history") || "[]");
-      history.push(newSurvey);
-      localStorage.setItem("sys_history", JSON.stringify(history));
-      ElMessage.success("送出成功，正在跳轉...");
-      router.push({ path: "/about", query: newSurvey });
+      // 直接呼叫 store 的 action
+      historyStore.addRecord(newSurvey);
+
+      ElMessage.success("送出成功");
+      router.push("/about");
     }
   });
 };

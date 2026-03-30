@@ -131,13 +131,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { mockHistory } from "../mock/data";
 import { watch } from "vue";
+import { useHistoryStore } from "../stores/history";
 
-const route = useRoute();
-const router = useRouter();
+const historyStore = useHistoryStore();
 const filterType = ref("all");
 const historyList = ref([]);
 const currentPage = ref(1);
@@ -155,26 +154,21 @@ const typeConfig = {
 };
 
 const filteredHistory = computed(() => {
-  if (filterType.value === "all") return historyList.value;
-  return historyList.value.filter((item) => item.type === filterType.value);
+  const all = historyStore.getAllHistory; // 已經在 store 裡排好序了
+  if (filterType.value === "all") return all;
+  return all.filter((item) => item.type === filterType.value);
 });
 
+// 分頁邏輯保持不變，但數據源改為上面的 filteredHistory
 const paginatedData = computed(() => {
-  const allFiltered = [...filteredHistory.value];
-  allFiltered.sort((a, b) => {
-    const timeA = new Date(a.createTime).getTime();
-    const timeB = new Date(b.createTime).getTime();
-    return timeB - timeA;
-  });
   const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-
-  return allFiltered.slice(start, end);
+  return filteredHistory.value.slice(start, start + pageSize.value);
 });
 
-const handlePageChange = (val) => {
-  currentPage.value = val;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+const handleDeleteHistory = (id) => {
+  // 呼叫 store 刪除
+  historyStore.deleteRecord(id);
+  ElMessage.success("刪除成功");
 };
 
 onMounted(() => {
@@ -189,20 +183,6 @@ onMounted(() => {
     historyList.value = parsedData;
   }
 });
-
-const handleDeleteHistory = (id) => {
-  ElMessageBox.confirm("確定要永久刪除這筆紀錄嗎？", "警告", {
-    confirmButtonText: "確定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      historyList.value = historyList.value.filter((item) => item.id !== id);
-      localStorage.setItem("sys_history", JSON.stringify(historyList.value));
-      ElMessage.success("刪除成功");
-    })
-    .catch(() => {});
-};
 
 const clearAllHistory = () => {
   ElMessageBox.confirm(
