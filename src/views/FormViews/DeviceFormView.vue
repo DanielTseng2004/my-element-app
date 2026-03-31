@@ -139,10 +139,8 @@ const submitForm = () => {
         deviceType: deviceForm.type,
         urgency: deviceForm.urgency,
         deviceDesc: deviceForm.desc,
-        // 建議統一使用 ISO 格式方便排序
         createTime: new Date().toISOString(),
       };
-      // ✅ 替換掉原本的 localStorage.setItem 邏輯
       historyStore.addRecord(newRecord);
       ElMessage.success("報修申請已送出");
       router.push("/about");

@@ -1,6 +1,6 @@
 <template>
-  <div class="page-wrapper">
-    <div class="about-page">
+  <div class="about-page">
+    <div class="page-wrapper">
       <el-page-header
         @back="$router.push('/')"
         content="系統管理中心"
@@ -12,15 +12,18 @@
         style="margin-bottom: 20px"
       >
         <template #header>
-          <div class="card-header">
+          <div class="card-header-flex">
             <span>歷史提交紀錄 (LocalStorage)</span>
             <el-button
               type="danger"
-              link
               @click="clearAllHistory"
               :disabled="historyList.length === 0"
-            >
-              清空所有紀錄
+              ><el-icon
+                size="20px"
+                color="danger"
+              >
+                <Delete /> </el-icon
+              ><span>清空所有紀錄</span>
             </el-button>
           </div>
         </template>
@@ -233,11 +236,9 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useHistoryStore } from "../stores/history";
 import { storeToRefs } from "pinia";
 
-// 1. 初始化 Store 並提取響應式屬性
 const historyStore = useHistoryStore();
-const { historyList } = storeToRefs(historyStore); // 關鍵：保持數據聯動
+const { historyList } = storeToRefs(historyStore);
 
-// 2. 基礎 UI 狀態
 const filterType = ref("all");
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -255,8 +256,6 @@ const typeConfig = {
   device: { label: "設備", tagType: "danger" },
   survey: { label: "問卷", tagType: "primary" },
 };
-
-// 3. 審核邏輯
 const auditVisible = ref(false);
 const currentId = ref(null);
 const auditForm = reactive({
@@ -287,9 +286,7 @@ const submitAudit = () => {
   auditVisible.value = false;
 };
 
-// 4. 過濾與搜尋邏輯 (核心計算屬性)
 const filteredHistory = computed(() => {
-  // 直接調用 store 的 getter
   let result = [...historyStore.getAllHistory];
 
   if (filterType.value !== "all") {
@@ -309,7 +306,6 @@ const filteredHistory = computed(() => {
     });
   }
 
-  // 排序邏輯
   result.sort((a, b) => {
     const dateA = new Date(a.createTime);
     const dateB = new Date(b.createTime);
@@ -319,13 +315,10 @@ const filteredHistory = computed(() => {
   return result;
 });
 
-// 5. 分頁邏輯
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value;
   return filteredHistory.value.slice(start, start + pageSize.value);
 });
-
-// 6. 生命週期與事件處理
 const handleDeleteHistory = (id) => {
   historyStore.deleteRecord(id);
   ElMessage.success("刪除成功");

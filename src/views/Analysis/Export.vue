@@ -4,18 +4,19 @@
       @back="$router.push('/')"
       content="數據導出中心"
       style="margin-bottom: 20px"
+      class="card-header-flex"
     />
     <div class="export-container">
       <el-card>
         <template #header>
-          <div class="header">
+          <div class="card-header-flex">
             <span>數據導出中心</span>
             <el-button
               type="success"
               @click="downloadExcel"
             >
-              <el-icon style="margin-right: 5px"><Download /></el-icon> 導出
-              Excel
+              <el-icon style="margin-right: 5px"><Download /></el-icon
+              ><span>導出 Excel</span>
             </el-button>
           </div>
         </template>
@@ -55,7 +56,6 @@ import * as XLSX from "xlsx";
 import { Download } from "@element-plus/icons-vue";
 const historyStore = useHistoryStore();
 const downloadExcel = () => {
-  // 1. 準備數據
   const data = historyStore.historyList.map((item) => ({
     提交時間: item.createTime,
     表單類型: item.type,
@@ -67,11 +67,10 @@ const downloadExcel = () => {
       item.feedback ||
       "",
   }));
-  // 2. 建立工作表
+
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "HistoryReport");
-  // 3. 下載檔案
   XLSX.writeFile(workbook, `Report_${new Date().getTime()}.xlsx`);
 };
 </script>

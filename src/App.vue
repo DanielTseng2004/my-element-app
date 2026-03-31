@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { useHistoryStore } from "./stores/history"; // 引入 Store
+import { useHistoryStore } from "./stores/history";
 
-// 引入所有需要的圖標
 import {
   HomeFilled,
   User,
@@ -18,12 +17,10 @@ import {
 const route = useRoute();
 const historyStore = useHistoryStore();
 
-// 1. 全域初始化數據：這確保了不論在哪個頁面重新整理，Store 都會有基礎數據
 onMounted(() => {
   historyStore.initHistory();
 });
 
-// 2. 監聽路由變化，自動捲動至頂部
 watch(
   () => route.path,
   () => {
@@ -112,7 +109,6 @@ watch(
 </template>
 
 <style scoped>
-/* 確保 transition 有淡入淡出效果 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;

@@ -1,72 +1,72 @@
 <template>
-  <!-- 頁面包裝器 -->
-  <div class="page-wrapper">
-    <div class="home-wrapper">
-      <!-- 歡迎區域 -->
-      <div class="welcome-section">
-        <h1>{{ welcomeText }}，管理員</h1>
-        <p>今天是 {{ currentDate }}，系統運行正常。</p>
-      </div>
-      <!-- 統計行 -->
-      <el-row
-        :gutter="20"
-        class="stat-row"
-      >
-        <el-col
-          :span="6"
-          v-for="item in quickStats"
-          :key="item.label"
+  <div class="home-page">
+    <div class="page-wrapper">
+      <div class="home-wrapper">
+        <div class="welcome-section">
+          <h1>{{ welcomeText }}，管理員</h1>
+          <p>今天是 {{ currentDate }}，系統運行正常。</p>
+        </div>
+        <el-row
+          :gutter="25"
+          class="stat-row"
         >
-          <el-card
-            shadow="hover"
-            class="stat-mini-card"
-          >
-            <div
-              class="stat-value"
-              :style="{ color: item.color }"
-            >
-              {{ item.value }}
-            </div>
-            <div class="stat-label">{{ item.label }}</div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <!-- 功能菜單網格 -->
-      <div class="menu-grid">
-        <el-row :gutter="25">
           <el-col
-            :xs="12"
-            :sm="8"
-            :md="6"
-            v-for="link in menuLinks"
-            :key="link.path"
+            :span="6"
+            v-for="item in quickStats"
+            :key="item.label"
           >
             <el-card
-              class="menu-card"
               shadow="hover"
-              @click="$router.push(link.path)"
+              class="stat-mini-card"
             >
               <div
-                class="icon-box"
-                :style="{ backgroundColor: link.bg }"
+                class="stat-value"
+                :style="{ color: item.color }"
               >
-                <el-icon
-                  :size="30"
-                  color="#fff"
-                  ><component :is="link.icon"
-                /></el-icon>
+                {{ item.value }}
               </div>
-              <h3>{{ link.title }}</h3>
-              <p>{{ link.desc }}</p>
+              <div class="stat-label">{{ item.label }}</div>
             </el-card>
           </el-col>
         </el-row>
+        <div
+          class="menu-grid"
+          style="margin-top: 20px"
+        >
+          <el-row :gutter="25">
+            <el-col
+              :xs="12"
+              :sm="8"
+              :md="6"
+              v-for="link in menuLinks"
+              :key="link.path"
+            >
+              <el-card
+                class="menu-card"
+                shadow="hover"
+                @click="$router.push(link.path)"
+              >
+                <div
+                  class="icon-box"
+                  :style="{ backgroundColor: link.bg }"
+                >
+                  <el-icon
+                    :size="30"
+                    color="#fff"
+                    ><component :is="link.icon"
+                  /></el-icon>
+                </div>
+                <h3>{{ link.title }}</h3>
+                <p>{{ link.desc }}</p>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-// 引入依賴
 import { computed } from "vue";
 import { useHistoryStore } from "../stores/history";
 import {
@@ -81,16 +81,13 @@ import { onMounted } from "vue";
 onMounted(() => {
   historyStore.initHistory();
 });
-// 使用store
 const historyStore = useHistoryStore();
-// 計算屬性：歡迎文字
+
 const welcomeText = computed(() => {
   const hour = new Date().getHours();
   return hour < 12 ? "早安" : hour < 18 ? "午安" : "晚安";
 });
-// 當前日期
 const currentDate = new Date().toLocaleDateString();
-// 簡單統計
 const quickStats = computed(() => {
   const today = new Date().toLocaleDateString();
   return [
@@ -119,7 +116,6 @@ const quickStats = computed(() => {
     },
   ];
 });
-// 功能入口
 const menuLinks = [
   {
     title: "用戶註冊",

@@ -1,12 +1,46 @@
-/* 整合所有樣式 */
-/* App.vue 樣式 */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+:root {
+  --bg-color: #f0f2f5;
+  --page-bg: #f5f7fa;
+  --card-bg: #ffffff;
+  --text-main: #303133;
+  --text-secondary: #909399;
+  --border-color: #ebeef5;
+  --nav-gradient: linear-gradient(90deg, #409eff 0%, #3a8ee6 100%);
+  --nav-sub-bg: #3a8ee6;
+}
+
+html.dark {
+  --bg-color: #16171d;
+  --page-bg: #1a1b22;
+  --card-bg: #24252b;
+  --text-main: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-color: #2e303a;
+  --nav-gradient: linear-gradient(90deg, #1f2028 0%, #2e303a 100%);
+  --nav-sub-bg: #24252b;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  font-family: var(--el-font-family);
+  transition: background-color 0.3s;
+}
+
 .nav-header {
-  background: linear-gradient(90deg, #409eff 0%, #3a8ee6 100%);
+  background: var(--nav-gradient);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
+
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -14,125 +48,101 @@
   align-items: center;
   padding: 0 20px;
 }
-.brand {
-  margin-right: 20px;
-}
+
 .brand-name {
   color: white;
   font-weight: bold;
   font-size: 1.2rem;
   white-space: nowrap;
+  margin-right: 20px;
 }
+
 .custom-menu {
   border-bottom: none !important;
   flex-grow: 1;
 }
+
+.el-menu--horizontal .el-menu {
+  background-color: var(--nav-sub-bg) !important;
+  border: none !important;
+}
+
+.el-menu-item .el-icon,
+.el-sub-menu__title .el-icon {
+  color: white !important;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
-.el-menu--horizontal .el-menu {
-  background-color: #3a8ee6 !important;
-  border: none !important;
-  padding: 5px 0;
-}
-.el-menu--horizontal .el-menu .el-menu-item {
-  background-color: transparent !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-}
-.el-menu--horizontal .el-menu .el-menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
-}
-.el-menu--horizontal .el-menu .el-menu-item.is-active {
-  color: #ffd04b !important;
-  background-color: rgba(0, 0, 0, 0.1) !important;
-}
-.el-menu--horizontal .el-menu .el-popper__arrow::before {
-  background-color: #3a8ee6 !important;
-  border-color: #3a8ee6 !important;
-}
-.el-sub-menu__title {
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-size: 15px !important;
-}
-.el-sub-menu__title:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #fff !important;
-}
-.el-menu-item .el-icon,
-.el-sub-menu__title .el-icon {
-  color: rgb(255, 255, 255) !important;
-}
-.nav-header .el-menu-item > .el-icon {
-  color: white !important;
-}
-.el-menu--horizontal .el-menu .el-icon {
-  color: #000000 !important;
-  margin-right: 8px;
-}
-.el-menu--horizontal .el-menu .el-menu-item {
-  color: #303133 !important;
-  background-color: #ffffff !important;
-  height: 45px;
-  line-height: 45px;
-  padding: 0 20px;
-}
-.el-menu--horizontal .el-menu .el-menu-item:hover {
-  background-color: #ecf5ff !important;
-  color: #409eff !important;
-}
-.el-menu--horizontal .el-menu .el-menu-item.is-active {
-  color: #409eff !important;
-  background-color: #ecf5ff !important;
-  font-weight: bold;
-}
-body {
-  margin: 0;
-  background-color: #f0f2f5;
-}
 .main-content {
-  padding: 24px;
+  padding: 20px;
 }
-/* HomeView.vue 樣式 */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
 .page-wrapper {
-  padding: 0;
-  min-height: 100vh;
-  max-width: 1200px;
+  max-width: 1000px;
   width: 95%;
   margin: 0 auto;
-  background-color: #f5f7fa;
+  padding: 20px 20px;
+  background-color: var(--page-bg);
+  transition: background-color 0.3s;
+}
+
+.home-page .page-wrapper {
+  padding: 0 20px;
+  max-width: 1000px;
 }
 .home-wrapper {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
+
+.about-page .page-wrapper {
+  padding: 20px 20px;
+  max-width: 1000px;
+}
+.about-page {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.form-view .page-wrapper {
+  padding: 20px 20px;
+  max-width: 1000px;
+}
+
 .welcome-section {
   margin-bottom: 40px;
 }
 .welcome-section h1 {
   font-size: 2rem;
-  color: #303133;
+  color: var(--text-main);
 }
-.stat-row {
-  margin-bottom: 40px;
-}
+
 .stat-mini-card {
   text-align: center;
   border-radius: 12px;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color);
 }
+
 .stat-value {
   font-size: 24px;
   font-weight: bold;
 }
 .stat-label {
-  color: #909399;
+  color: var(--text-secondary);
   font-size: 14px;
   margin-top: 5px;
 }
+
 .menu-card {
   min-height: 200px;
   text-align: center;
@@ -140,10 +150,13 @@ body {
   transition: transform 0.3s;
   margin-bottom: 25px;
   border-radius: 15px;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color);
 }
 .menu-card:hover {
   transform: translateY(-10px);
 }
+
 .icon-box {
   width: 60px;
   height: 60px;
@@ -153,83 +166,21 @@ body {
   justify-content: center;
   margin: 20px auto 15px;
 }
-.menu-card h3 {
-  margin: 10px 0;
-  font-size: 18px;
-}
-.menu-card p {
-  color: #909399;
-  font-size: 13px;
-  padding: 0 10px;
-}
-/* AboutView.vue 樣式 */
-/* 頁面外層容器 */
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1200px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-.about-page {
-  padding: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-/* 卡片頭部佈局 */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-/* 搜尋與排序工具列 */
+
 .filter-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   gap: 20px;
-  background: #fff;
-}
-.right-tools {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.sort-label {
-  font-size: 14px;
-  color: #606266;
-  white-space: nowrap;
-}
-/* 類型切換器間距優化 */
-.el-segmented {
-  margin-bottom: 20px;
-}
-/* 表格展開內容樣式 */
-.expand-wrapper {
-  padding: 20px;
-  background: #f8f9fa;
+  background: var(--card-bg);
+  padding: 10px;
   border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.6;
-  border: 1px solid #ebeef5;
 }
-.expand-wrapper p {
-  margin: 8px 0;
-}
-/* 其他卡片輔助樣式 */
-.info-card {
-  margin-bottom: 20px;
-}
-.card-footer {
-  margin-top: 15px;
-  text-align: right;
-}
-/* 響應式設計 */
+
 @media (max-width: 768px) {
   .page-wrapper {
-    padding: 15px 10px;
+    padding: 15px 10px !important;
   }
   .about-page {
     padding: 0;
@@ -239,47 +190,6 @@ body {
     align-items: stretch;
     gap: 15px;
   }
-  .filter-toolbar .el-input {
-    width: 100% !important;
-  }
-  .right-tools {
-    justify-content: space-between;
-  }
-  .right-tools .el-select {
-    flex: 1;
-  }
-}
-/* FormView.vue 樣式 */
-:deep(.el-form-item__content > .el-input),
-:deep(.el-form-item__content > .el-textarea),
-:deep(.el-form-item__content > .el-radio-group) {
-  width: 100%;
-}
-.form-buttons-item :deep(.el-form-item__content) {
-  justify-content: center;
-}
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-.form-card {
-  width: 95%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.form-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-@media (max-width: 768px) {
-  .page-wrapper {
-    padding: 15px;
-  }
   .form-buttons {
     flex-direction: column;
     width: 100%;
@@ -289,44 +199,19 @@ body {
     margin-left: 0 !important;
   }
 }
-/* 其他Form樣式 */
-:deep(.el-form-item__content > .el-input),
-:deep(.el-form-item__content > .el-textarea),
-:deep(.el-form-item__content > .el-radio-group),
-:deep(.el-form-item__content > .el-date-picker) {
-  width: 100%;
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-.form-buttons-item :deep(.el-form-item__content) {
-  justify-content: center;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-.form-card {
-  width: 95%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.form-buttons {
+
+.card-header-flex {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-@media (max-width: 768px) {
-  .page-wrapper {
-    padding: 15px;
-  }
-  .form-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-  .el-button {
-    width: 100%;
-    margin-left: 0 !important;
-  }
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
