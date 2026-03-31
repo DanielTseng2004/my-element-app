@@ -121,7 +121,7 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { useHistoryStore } from "../stores/history";
+import { useHistoryStore } from "../../stores/history";
 const historyStore = useHistoryStore();
 const router = useRouter();
 const deviceFormRef = ref(null);

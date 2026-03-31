@@ -83,7 +83,7 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { useHistoryStore } from "../stores/history";
+import { useHistoryStore } from "../../stores/history";
 const historyStore = useHistoryStore();
 const router = useRouter();
 const formRef = ref(null);
@@ -111,7 +111,6 @@ const submitForm = () => {
         createTime: new Date().toISOString(),
       };
 
-      // ✅ 統一呼叫 Action
       historyStore.addRecord(newSys);
 
       ElMessage.success("送出成功");

@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-// src/router/index.js 裡面的 import 部分
 import HomeView from "../views/HomeView.vue";
-import FormView from "../views/FormView.vue";
-import SysFormView from "../views/SysFormView.vue";
+import FormView from "../views/FormViews/FormView.vue";
+import SysFormView from "../views/FormViews/SysFormView.vue";
 import AboutView from "../views/AboutView.vue";
-import DeviceFormView from "../views/DeviceFormView.vue";
-import Survey from "../views/Survey.vue";
+import DeviceFormView from "../views/FormViews/DeviceFormView.vue";
+import Survey from "../views/FormViews/Survey.vue";
 
 const routes = [
   {
@@ -14,29 +13,35 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/forms",
+    name: "form-center",
+    children: [
+      { path: "user", name: "form-user", component: FormView },
+      { path: "system", name: "form-system", component: SysFormView },
+      { path: "device", name: "form-device", component: DeviceFormView },
+      { path: "survey", name: "form-survey", component: Survey },
+    ],
+  },
+  {
+    path: "/analysis",
+    name: "analysis-center",
+    children: [
+      {
+        path: "summary",
+        name: "summary",
+        component: () => import("../views/Analysis/Summary.vue"),
+      },
+      {
+        path: "export",
+        name: "export",
+        component: () => import("../views/Analysis/Export.vue"),
+      },
+    ],
+  },
+  {
     path: "/about",
     name: "about",
     component: AboutView,
-  },
-  {
-    path: "/form",
-    name: "form",
-    component: FormView,
-  },
-  {
-    path: "/sysform",
-    name: "sysform",
-    component: SysFormView,
-  },
-  {
-    path: "/device",
-    name: "device",
-    component: DeviceFormView,
-  },
-  {
-    path: "/survey",
-    name: "survey",
-    component: Survey,
   },
 ];
 

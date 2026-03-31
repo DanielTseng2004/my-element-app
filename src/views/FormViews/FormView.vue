@@ -82,7 +82,7 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { useHistoryStore } from "../stores/history";
+import { useHistoryStore } from "../../stores/history";
 const historyStore = useHistoryStore();
 const router = useRouter();
 const formRef = ref(null);
