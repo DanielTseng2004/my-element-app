@@ -1,34 +1,3 @@
-<script setup lang="ts">
-import { onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useHistoryStore } from "./stores/history";
-
-import {
-  HomeFilled,
-  User,
-  Setting,
-  Monitor,
-  ChatLineRound,
-  PieChart,
-  Download,
-  Memo,
-} from "@element-plus/icons-vue";
-
-const route = useRoute();
-const historyStore = useHistoryStore();
-
-onMounted(() => {
-  historyStore.initHistory();
-});
-
-watch(
-  () => route.path,
-  () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  },
-);
-</script>
-
 <template>
   <div class="common-layout">
     <header class="nav-header">
@@ -107,6 +76,37 @@ watch(
     </footer>
   </div>
 </template>
+
+<script setup lang="ts">
+import { onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useHistoryStore } from "./stores/history";
+
+import {
+  HomeFilled,
+  User,
+  Setting,
+  Monitor,
+  ChatLineRound,
+  PieChart,
+  Download,
+  Memo,
+} from "@element-plus/icons-vue";
+
+const route = useRoute();
+const historyStore = useHistoryStore();
+
+onMounted(() => {
+  historyStore.initHistory();
+});
+
+watch(
+  () => route.path,
+  () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+);
+</script>
 
 <style scoped>
 .fade-enter-active,
