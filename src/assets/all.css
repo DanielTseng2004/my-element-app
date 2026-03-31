@@ -11,12 +11,11 @@
   --text-main: #303133;
   --text-secondary: #909399;
   --border-color: #ebeef5;
-  --nav-bg: #409eff; /* 改用單一背景色以利過渡 */
+  --nav-bg: #409eff;
   --nav-sub-bg: #3a8ee6;
   --transition-speed: 0.3s;
 }
 
-/* 柔和深灰色模式優化 (類似 GitHub/VS Code 風格) */
 html.dark {
   --bg-color: #1a1b1ee8;
   --page-bg: #1a1b1ef0;
@@ -27,7 +26,6 @@ html.dark {
   --nav-bg: #25262b;
   --nav-sub-bg: #25262b;
 
-  /* Element Plus 全域變數覆蓋 */
   --el-bg-color: #1a1b1e;
   --el-bg-color-overlay: #25262b;
   --el-text-color-primary: #d1d5db;
@@ -40,7 +38,6 @@ html.dark {
   --el-mask-color: rgba(0, 0, 0, 0.7);
 }
 
-/* 全域過渡優化：確保所有元件同步切換 */
 *,
 *::before,
 *::after {
@@ -51,7 +48,6 @@ html.dark {
     box-shadow var(--transition-speed) ease-in-out !important;
 }
 
-/* 強制覆蓋 Element Plus 組件深色模式樣式 */
 html.dark .el-card,
 html.dark .el-table,
 html.dark .el-table tr,
@@ -67,7 +63,6 @@ html.dark .el-table__footer-wrapper {
   border-color: var(--border-color) !important;
 }
 
-/* 解決斑馬紋 (Stripe) 導致的黑白相間問題 */
 html.dark
   .el-table--striped
   .el-table__body
@@ -93,7 +88,6 @@ html.dark .el-input__inner {
   color: var(--text-main) !important;
 }
 
-/* 分頁組件 (Pagination) 深色模式優化 */
 html.dark .el-pagination {
   --el-pagination-bg-color: var(--card-bg) !important;
   --el-pagination-hover-color: var(--el-color-primary) !important;
@@ -135,7 +129,6 @@ html.dark .el-pagination .el-input__wrapper {
   background-color: #1a1b1e !important;
 }
 
-/* 返回按鈕 (Page Header Back) 深色模式優化 */
 html.dark .el-page-header__back {
   color: var(--text-main) !important;
 }
@@ -158,7 +151,6 @@ html.dark .el-page-header__content {
   color: var(--text-main) !important;
 }
 
-/* 全域文字標籤深色模式優化 */
 html.dark p,
 html.dark span,
 html.dark div:not(.el-card):not(.el-table):not(.el-menu) {
@@ -171,7 +163,6 @@ html.dark .footer {
   color: var(--text-secondary) !important;
 }
 
-/* 狀態標籤 (Tag) 深色模式優化 */
 html.dark .el-tag {
   --el-tag-bg-color: #2c2e33 !important;
   --el-tag-border-color: #373a40 !important;
@@ -215,7 +206,7 @@ body {
 }
 
 .nav-header {
-  background-color: var(--nav-bg); /* 改用單一背景色以利過渡 */
+  background-color: var(--nav-bg);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
