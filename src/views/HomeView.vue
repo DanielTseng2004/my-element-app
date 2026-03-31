@@ -1,76 +1,233 @@
 <template>
-  <div class="home-container">
-    <el-row
-      justify="center"
-      :align="'middle'"
-      style="min-height: 80vh"
-    >
-      <el-col
-        :xs="22"
-        :sm="12"
+  <div class="page-wrapper">
+    <div class="home-wrapper">
+      <div class="welcome-section">
+        <h1>{{ welcomeText }}，管理員</h1>
+        <p>今天是 {{ currentDate }}，系統運行正常。</p>
+      </div>
+
+      <el-row
+        :gutter="20"
+        class="stat-row"
       >
-        <el-card shadow="hover">
-          <el-result
-            icon="success"
-            title="歡迎進入系統"
-            sub-title="點擊下方按鈕開始填寫資料"
+        <el-col
+          :span="6"
+          v-for="item in quickStats"
+          :key="item.label"
+        >
+          <el-card
+            shadow="hover"
+            class="stat-mini-card"
           >
-            <template #extra>
-              <el-form label-width="auto">
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    size="large"
-                    @click="$router.push('/form')"
-                    ><el-icon color="light"><User /></el-icon>
-                    <span>立即前往用戶註冊</span>
-                  </el-button>
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    size="large"
-                    @click="$router.push('/sysform')"
-                    ><el-icon color="light"><Setting /></el-icon
-                    ><span> 立即前往系統表單</span>
-                  </el-button>
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    size="large"
-                    @click="$router.push('/device')"
-                    ><el-icon color="light"><Monitor /></el-icon
-                    ><span> 立即前往報修表單</span>
-                  </el-button>
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    size="large"
-                    @click="$router.push('/survey')"
-                    ><el-icon color="light"><Document /></el-icon
-                    ><span>立即前往問卷調查</span>
-                  </el-button>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-result>
-        </el-card>
-      </el-col>
-    </el-row>
+            <div
+              class="stat-value"
+              :style="{ color: item.color }"
+            >
+              {{ item.value }}
+            </div>
+            <div class="stat-label">{{ item.label }}</div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <div class="menu-grid">
+        <el-row :gutter="25">
+          <el-col
+            :xs="12"
+            :sm="8"
+            :md="6"
+            v-for="link in menuLinks"
+            :key="link.path"
+          >
+            <el-card
+              class="menu-card"
+              shadow="hover"
+              @click="$router.push(link.path)"
+            >
+              <div
+                class="icon-box"
+                :style="{ backgroundColor: link.bg }"
+              >
+                <el-icon
+                  :size="30"
+                  color="#fff"
+                  ><component :is="link.icon"
+                /></el-icon>
+              </div>
+              <h3>{{ link.title }}</h3>
+              <p>{{ link.desc }}</p>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
 </template>
 
+<script setup>
+import { computed } from "vue";
+import { useHistoryStore } from "../stores/history";
+import {
+  User,
+  Setting,
+  Monitor,
+  Document,
+  PieChart,
+  List,
+} from "@element-plus/icons-vue";
+
+const historyStore = useHistoryStore();
+
+const welcomeText = computed(() => {
+  const hour = new Date().getHours();
+  return hour < 12 ? "早安" : hour < 18 ? "午安" : "晚安";
+});
+
+const currentDate = new Date().toLocaleDateString();
+
+// 簡單統計
+const quickStats = computed(() => [
+  {
+    label: "總提交數",
+    value: historyStore.historyList.length,
+    color: "#409eff",
+  },
+  {
+    label: "待處理案件",
+    value: historyStore.historyList.filter((i) => i.status === "pending")
+      .length,
+    color: "#e6a23c",
+  },
+  { label: "今日新增", value: 0, color: "#67c23a" }, // 可根據 createTime 加強邏輯
+  {
+    label: "系統異常",
+    value: historyStore.historyList.filter((i) => i.type === "system").length,
+    color: "#f56c6c",
+  },
+]);
+
+// 功能入口
+const menuLinks = [
+  {
+    title: "用戶註冊",
+    desc: "新增人員基本資料",
+    path: "/forms/user",
+    icon: User,
+    bg: "#409eff",
+  },
+  {
+    title: "系統表單",
+    desc: "回報軟體運行錯誤",
+    path: "/forms/system",
+    icon: Setting,
+    bg: "#67c23a",
+  },
+  {
+    title: "設備報修",
+    desc: "硬體故障申請維護",
+    path: "/forms/device",
+    icon: Monitor,
+    bg: "#e6a23c",
+  },
+  {
+    title: "問卷調查",
+    desc: "收集用戶滿意度",
+    path: "/forms/survey",
+    icon: Document,
+    bg: "#f56c6c",
+  },
+  {
+    title: "數據分析",
+    desc: "視覺化統計報表",
+    path: "/analysis/summary",
+    icon: PieChart,
+    bg: "#909399",
+  },
+  {
+    title: "管理中心",
+    desc: "歷史紀錄審核管理",
+    path: "/about",
+    icon: List,
+    bg: "#303133",
+  },
+];
+</script>
+
 <style scoped>
-.home-container {
-  background-color: #f5f7fa;
+.page-wrapper {
+  padding: 0;
   min-height: 100vh;
+  max-width: 1200px;
+  width: 95%;
+  margin: 0 auto;
+  background-color: #f5f7fa;
+}
+.home-wrapper {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* 確保 el-row 能夠撐滿高度以達成垂直置中 */
-.el-row {
-  width: 100%;
+.welcome-section {
+  margin-bottom: 40px;
+}
+
+.welcome-section h1 {
+  font-size: 2rem;
+  color: #303133;
+}
+
+.stat-row {
+  margin-bottom: 40px;
+}
+
+.stat-mini-card {
+  text-align: center;
+  border-radius: 12px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-label {
+  color: #909399;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.menu-card {
+  min-height: 200px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s;
+  margin-bottom: 25px;
+  border-radius: 15px;
+}
+
+.menu-card:hover {
+  transform: translateY(-10px);
+}
+
+.icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto 15px;
+}
+
+.menu-card h3 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.menu-card p {
+  color: #909399;
+  font-size: 13px;
+  padding: 0 10px;
 }
 </style>

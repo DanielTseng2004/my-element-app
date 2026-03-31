@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <el-page-header
       @back="$router.push('/')"
-      content="資料填寫頁面"
+      content="用戶註冊"
       style="margin-bottom: 20px"
     />
 

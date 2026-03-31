@@ -22,8 +22,24 @@ export const useHistoryStore = defineStore("history", {
       }
     },
     addRecord(record) {
-      this.historyList.push(record);
+      const newRecord = {
+        ...record,
+        status: record.status || "pending",
+        adminMsg: "",
+        updateTime: new Date().toISOString(),
+      };
+      this.historyList.push(newRecord);
       this.saveToLocal();
+    },
+
+    updateStatus(id, newStatus, msg) {
+      const index = this.historyList.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        this.historyList[index].status = newStatus;
+        this.historyList[index].adminMsg = msg;
+        this.historyList[index].updateTime = new Date().toISOString();
+        this.saveToLocal();
+      }
     },
     deleteRecord(id) {
       this.historyList = this.historyList.filter((item) => item.id !== id);

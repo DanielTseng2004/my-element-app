@@ -48,6 +48,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 如果有按下「回上一頁」，就回到原本的位置；否則一律捲到頂部
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0, behavior: "smooth" }; // behavior: 'smooth' 會有一點平滑滾動感
+    }
+  },
 });
 
 export default router;

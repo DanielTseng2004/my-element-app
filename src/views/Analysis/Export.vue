@@ -1,45 +1,53 @@
 <template>
-  <div class="export-container">
-    <el-card>
-      <template #header>
-        <div class="header">
-          <span>數據導出中心</span>
-          <el-button
-            type="success"
-            @click="downloadExcel"
-          >
-            <el-icon style="margin-right: 5px"><Download /></el-icon> 導出 Excel
-          </el-button>
-        </div>
-      </template>
+  <div class="page-wrapper">
+    <el-page-header
+      @back="$router.push('/')"
+      content="數據導出中心"
+      style="margin-bottom: 20px"
+    />
+    <div class="export-container">
+      <el-card>
+        <template #header>
+          <div class="header">
+            <span>數據導出中心</span>
+            <el-button
+              type="success"
+              @click="downloadExcel"
+            >
+              <el-icon style="margin-right: 5px"><Download /></el-icon> 導出
+              Excel
+            </el-button>
+          </div>
+        </template>
 
-      <el-table
-        :data="historyStore.historyList"
-        border
-        stripe
-      >
-        <el-table-column
-          prop="createTime"
-          label="時間"
-          width="180"
-        />
-        <el-table-column
-          prop="type"
-          label="類型"
-          width="100"
-        />
-        <el-table-column label="內容摘要">
-          <template #default="scope">
-            {{
-              scope.row.userName ||
-              scope.row.sysName ||
-              scope.row.deviceName ||
-              "問卷提交"
-            }}
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
+        <el-table
+          :data="historyStore.historyList"
+          border
+          stripe
+        >
+          <el-table-column
+            prop="createTime"
+            label="時間"
+            width="180"
+          />
+          <el-table-column
+            prop="type"
+            label="類型"
+            width="100"
+          />
+          <el-table-column label="內容摘要">
+            <template #default="scope">
+              {{
+                scope.row.userName ||
+                scope.row.sysName ||
+                scope.row.deviceName ||
+                "問卷提交"
+              }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -79,5 +87,13 @@ const downloadExcel = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.page-wrapper {
+  padding: 40px;
+  min-height: 100vh;
+  max-width: 1000px;
+  width: 95%;
+  margin: 0 auto;
+  background-color: #f5f7fa;
 }
 </style>

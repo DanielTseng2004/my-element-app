@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { PieChart } from "@element-plus/icons-vue";
+</script>
+
 <template>
   <div class="common-layout">
     <header class="nav-header">
@@ -40,7 +44,7 @@
           <el-sub-menu index="/analysis">
             <template #title><span>數據報表</span></template>
             <el-menu-item index="/analysis/summary"
-              ><el-icon><DataBoard /></el-icon>數據概覽</el-menu-item
+              ><el-icon><PieChart /></el-icon>數據概覽</el-menu-item
             >
             <el-menu-item index="/analysis/export"
               ><el-icon><Download /></el-icon>報表導出</el-menu-item
