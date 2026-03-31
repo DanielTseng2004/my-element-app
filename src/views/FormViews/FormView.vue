@@ -42,7 +42,7 @@
           <el-input
             v-model="form.desc"
             type="textarea"
-            rows="3"
+            :rows="3"
           />
         </el-form-item>
       </el-form>

@@ -77,6 +77,10 @@ import {
   PieChart,
   List,
 } from "@element-plus/icons-vue";
+import { onMounted } from "vue";
+onMounted(() => {
+  historyStore.initHistory();
+});
 // 使用store
 const historyStore = useHistoryStore();
 // 計算屬性：歡迎文字
@@ -87,25 +91,34 @@ const welcomeText = computed(() => {
 // 當前日期
 const currentDate = new Date().toLocaleDateString();
 // 簡單統計
-const quickStats = computed(() => [
-  {
-    label: "總提交數",
-    value: historyStore.historyList.length,
-    color: "#409eff",
-  },
-  {
-    label: "待處理案件",
-    value: historyStore.historyList.filter((i) => i.status === "pending")
-      .length,
-    color: "#e6a23c",
-  },
-  { label: "今日新增", value: 0, color: "#67c23a" }, // 可根據 createTime 加強邏輯
-  {
-    label: "系統異常",
-    value: historyStore.historyList.filter((i) => i.type === "system").length,
-    color: "#f56c6c",
-  },
-]);
+const quickStats = computed(() => {
+  const today = new Date().toLocaleDateString();
+  return [
+    {
+      label: "總提交數",
+      value: historyStore.historyList.length,
+      color: "#409eff",
+    },
+    {
+      label: "待處理案件",
+      value: historyStore.historyList.filter((i) => i.status === "pending")
+        .length,
+      color: "#e6a23c",
+    },
+    {
+      label: "今日新增",
+      value: historyStore.historyList.filter(
+        (i) => new Date(i.createTime).toLocaleDateString() === today,
+      ).length,
+      color: "#67c23a",
+    },
+    {
+      label: "系統異常",
+      value: historyStore.historyList.filter((i) => i.type === "system").length,
+      color: "#f56c6c",
+    },
+  ];
+});
 // 功能入口
 const menuLinks = [
   {

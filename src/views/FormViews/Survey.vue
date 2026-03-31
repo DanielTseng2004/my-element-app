@@ -86,10 +86,11 @@ const submitForm = () => {
       const newSurvey = {
         id: Date.now(),
         type: "survey",
-        // ... 其他欄位
+        surveyTitle: form.surveyTitle,
+        rating: form.rating,
+        feedback: form.feedback,
         createTime: new Date().toISOString(),
       };
-      // 直接呼叫 store 的 action
       historyStore.addRecord(newSurvey);
       ElMessage.success("送出成功");
       router.push("/about");

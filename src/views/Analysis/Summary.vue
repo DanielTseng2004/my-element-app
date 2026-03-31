@@ -56,20 +56,32 @@
 </template>
 <script setup>
 import { ref, onMounted, computed, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useHistoryStore } from "../../stores/history";
 import * as echarts from "echarts";
 import { User, Setting, Monitor, ChatLineRound } from "@element-plus/icons-vue";
 const historyStore = useHistoryStore();
+const route = useRoute();
+const router = useRouter();
+
+// 直接跳轉時自動刷新一次（避免路由切換後圖表渲染異常）
+if (route.query._reloaded !== "1") {
+  router.replace({
+    path: route.path,
+    query: { ...route.query, _reloaded: "1" },
+  });
+  window.location.reload();
+}
+
 const pieChartRef = ref(null);
 const lineChartRef = ref(null);
 // 計算各類型數量
 const stats = computed(() => {
-  const list = historyStore.historyList;
   return {
-    user: list.filter((i) => i.type === "user").length,
-    system: list.filter((i) => i.type === "system").length,
-    device: list.filter((i) => i.type === "device").length,
-    survey: list.filter((i) => i.type === "survey").length,
+    user: historyStore.historyList.filter((i) => i.type === "user").length,
+    system: historyStore.historyList.filter((i) => i.type === "system").length,
+    device: historyStore.historyList.filter((i) => i.type === "device").length,
+    survey: historyStore.historyList.filter((i) => i.type === "survey").length,
   };
 });
 const statCards = computed(() => [
@@ -93,47 +105,32 @@ const statCards = computed(() => [
     color: "#F56C6C",
   },
 ]);
+let pieChart, lineChart;
+
+const resizeCharts = () => {
+  pieChart?.resize();
+  lineChart?.resize();
+};
+
 onMounted(async () => {
   // 使用 nextTick 確保 Element Plus 組件的佈局已經完全撐開
   await nextTick();
   // 初始化圓餅圖
-  const pieChart = echarts.init(pieChartRef.value);
-  pieChart.setOption({
-    tooltip: { trigger: "item" },
-    series: [
-      {
-        type: "pie",
-        radius: "70%",
-        data: [
-          { value: stats.value.user, name: "用戶" },
-          { value: stats.value.system, name: "系統" },
-          { value: stats.value.device, name: "設備" },
-          { value: stats.value.survey, name: "問卷" },
-        ],
-      },
-    ],
-  });
+  pieChart = echarts.init(pieChartRef.value);
   // 初始化折線圖
-  const lineChart = echarts.init(lineChartRef.value);
-  lineChart.setOption({
-    xAxis: {
-      type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    yAxis: { type: "value" },
-    series: [
-      { data: [12, 19, 15, 22, 30, 10, 15], type: "line", smooth: true },
-    ],
-  });
-  // 重要：強制觸獲一次 resize，確保圖表填滿容器
-  setTimeout(() => {
-    pieChart.resize();
-    lineChart.resize();
-  }, 100);
-  // 監聽視窗縮放，否則圖表不會隨頁面大小變動
-  window.addEventListener("resize", () => {
-    pieChart.resize();
-    lineChart.resize();
-  });
+  lineChart = echarts.init(lineChartRef.value);
+  // ... setOption ...
+
+  resizeCharts();
+  window.addEventListener("resize", resizeCharts);
+
+  // 如果剛進來 chart 容器尚未定義，延遲一次保險
+  setTimeout(resizeCharts, 300);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", resizeCharts);
+  pieChart?.dispose();
+  lineChart?.dispose();
 });
 </script>

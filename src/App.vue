@@ -1,16 +1,45 @@
 <script setup lang="ts">
-// 引入圖標
-import { PieChart } from "@element-plus/icons-vue";
+import { onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useHistoryStore } from "./stores/history"; // 引入 Store
+
+// 引入所有需要的圖標
+import {
+  HomeFilled,
+  User,
+  Setting,
+  Monitor,
+  ChatLineRound,
+  PieChart,
+  Download,
+  Memo,
+} from "@element-plus/icons-vue";
+
+const route = useRoute();
+const historyStore = useHistoryStore();
+
+// 1. 全域初始化數據：這確保了不論在哪個頁面重新整理，Store 都會有基礎數據
+onMounted(() => {
+  historyStore.initHistory();
+});
+
+// 2. 監聽路由變化，自動捲動至頂部
+watch(
+  () => route.path,
+  () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  },
+);
 </script>
+
 <template>
-  <!-- 應用佈局 -->
   <div class="common-layout">
-    <!-- 導航頭部 -->
     <header class="nav-header">
       <div class="nav-container">
         <div class="brand">
           <span class="brand-name">VUE ADMIN</span>
         </div>
+
         <el-menu
           :default-active="$route.path"
           class="custom-menu"
@@ -25,60 +54,72 @@ import { PieChart } from "@element-plus/icons-vue";
             <el-icon><HomeFilled /></el-icon>
             <span>首頁</span>
           </el-menu-item>
+
           <el-sub-menu index="/forms">
             <template #title><span>表單中心</span></template>
-            <el-menu-item index="/forms/user"
-              ><el-icon><User /></el-icon>用戶註冊</el-menu-item
-            >
-            <el-menu-item index="/forms/system"
-              ><el-icon><Setting /></el-icon>系統表單</el-menu-item
-            >
-            <el-menu-item index="/forms/device"
-              ><el-icon><Monitor /></el-icon>報修表單</el-menu-item
-            >
-            <el-menu-item index="/forms/survey"
-              ><el-icon><ChatLineRound /></el-icon>問卷調查</el-menu-item
-            >
+            <el-menu-item index="/forms/user">
+              <el-icon><User /></el-icon>用戶註冊
+            </el-menu-item>
+            <el-menu-item index="/forms/system">
+              <el-icon><Setting /></el-icon>系統表單
+            </el-menu-item>
+            <el-menu-item index="/forms/device">
+              <el-icon><Monitor /></el-icon>報修表單
+            </el-menu-item>
+            <el-menu-item index="/forms/survey">
+              <el-icon><ChatLineRound /></el-icon>問卷調查
+            </el-menu-item>
           </el-sub-menu>
+
           <el-sub-menu index="/analysis">
             <template #title><span>數據報表</span></template>
-            <el-menu-item index="/analysis/summary"
-              ><el-icon><PieChart /></el-icon>數據概覽</el-menu-item
-            >
-            <el-menu-item index="/analysis/export"
-              ><el-icon><Download /></el-icon>報表導出</el-menu-item
-            >
+            <el-menu-item index="/analysis/summary">
+              <el-icon><PieChart /></el-icon>數據概覽
+            </el-menu-item>
+            <el-menu-item index="/analysis/export">
+              <el-icon><Download /></el-icon>報表導出
+            </el-menu-item>
           </el-sub-menu>
+
           <el-menu-item index="/about">
             <el-icon><Memo /></el-icon>
             <span>系統管理</span>
           </el-menu-item>
+
           <div class="flex-grow" />
         </el-menu>
       </div>
     </header>
-    <!-- 主內容區域 -->
+
     <el-main class="main-content">
-      <router-view v-slot="{ Component }">
+      <router-view v-slot="{ Component, route }">
         <transition
           name="fade"
           mode="out-in"
         >
-          <component :is="Component" />
+          <component
+            :is="Component"
+            :key="route.fullPath"
+          />
         </transition>
       </router-view>
     </el-main>
-    <!-- 頁腳 -->
-    <footer
-      class="footer"
-      style="
-        text-align: center;
-        padding: 20px;
-        background-color: #3a8ee6;
-        color: #ffffff;
-      "
-    >
+
+    <footer class="footer">
       <p>© 2026 Vue Element Plus 練習專案</p>
     </footer>
   </div>
 </template>
+
+<style scoped>
+/* 確保 transition 有淡入淡出效果 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
