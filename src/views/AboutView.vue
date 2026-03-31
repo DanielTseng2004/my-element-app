@@ -24,7 +24,30 @@
             </el-button>
           </div>
         </template>
+        <div class="filter-toolbar">
+          <el-input
+            v-model="searchQuery"
+            placeholder="搜尋姓名、設備、系統名稱或 ID..."
+            prefix-icon="Search"
+            clearable
+            style="width: 300px"
+          />
 
+          <div class="right-tools">
+            <span class="label">排序：</span>
+            <el-select
+              v-model="sortOrder"
+              style="width: 150px"
+            >
+              <el-option
+                v-for="item in sortOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </div>
+        </div>
         <el-segmented
           v-model="filterType"
           :options="[
@@ -204,7 +227,13 @@ const filterType = ref("all");
 const historyList = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
+const searchQuery = ref("");
+const sortOrder = ref("newest");
 
+const sortOptions = [
+  { label: "從新到舊", value: "newest" },
+  { label: "從舊到新", value: "oldest" },
+];
 watch(filterType, () => {
   currentPage.value = 1;
 });
@@ -244,20 +273,41 @@ const submitAudit = () => {
   ElMessage.success("狀態更新完成");
   auditVisible.value = false;
 };
+
 const filteredHistory = computed(() => {
-  const all = historyStore.getAllHistory; // 已經在 store 裡排好序了
-  if (filterType.value === "all") return all;
-  return all.filter((item) => item.type === filterType.value);
+  let result = [...historyStore.getAllHistory];
+
+  if (filterType.value !== "all") {
+    result = result.filter((item) => item.type === filterType.value);
+  }
+
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
+    result = result.filter((item) => {
+      return (
+        (item.userName && item.userName.toLowerCase().includes(q)) ||
+        (item.sysName && item.sysName.toLowerCase().includes(q)) ||
+        (item.deviceName && item.deviceName.toLowerCase().includes(q)) ||
+        (item.surveyTitle && item.surveyTitle.toLowerCase().includes(q)) ||
+        (item.id && item.id.toString().includes(q))
+      );
+    });
+  }
+  result.sort((a, b) => {
+    const dateA = new Date(a.createTime);
+    const dateB = new Date(b.createTime);
+    return sortOrder.value === "newest" ? dateB - dateA : dateA - dateB;
+  });
+
+  return result;
 });
 
-// 分頁邏輯保持不變，但數據源改為上面的 filteredHistory
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value;
   return filteredHistory.value.slice(start, start + pageSize.value);
 });
 
 const handleDeleteHistory = (id) => {
-  // 呼叫 store 刪除
   historyStore.deleteRecord(id);
   ElMessage.success("刪除成功");
 };
@@ -280,6 +330,7 @@ const clearAllHistory = () => {
 </script>
 
 <style scoped>
+/* 頁面外層容器 */
 .page-wrapper {
   padding: 40px;
   min-height: 100vh;
@@ -288,32 +339,98 @@ const clearAllHistory = () => {
   margin: 0 auto;
   background-color: #f5f7fa;
 }
+
 .about-page {
   padding: 20px;
   max-width: 1100px;
   margin: 0 auto;
 }
+
+/* 卡片頭部佈局 */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+/* --- 新增：搜尋與排序工具列 --- */
+.filter-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+  background: #fff;
+}
+
+.right-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-label {
+  font-size: 14px;
+  color: #606266;
+  white-space: nowrap;
+}
+
+/* 類型切換器 (segmented) 的間距優化 */
+.el-segmented {
+  margin-bottom: 20px;
+}
+
+/* 表格展開內容樣式 */
 .expand-wrapper {
-  padding: 15px;
+  padding: 20px;
   background: #f8f9fa;
   border-radius: 8px;
   font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid #ebeef5;
 }
+
+.expand-wrapper p {
+  margin: 8px 0;
+}
+
+/* 其他卡片輔助樣式 */
 .info-card {
   margin-bottom: 20px;
 }
+
 .card-footer {
   margin-top: 15px;
   text-align: right;
 }
+
+/* --- 響應式佈局 (手機版) --- */
 @media (max-width: 768px) {
+  .page-wrapper {
+    padding: 15px 10px; /* 縮小手機版的內距 */
+  }
+
   .about-page {
-    padding: 10px;
+    padding: 0;
+  }
+
+  /* 手機版將搜尋和排序垂直排列 */
+  .filter-toolbar {
+    flex-direction: column;
+    align-items: stretch; /* 讓輸入框撐滿寬度 */
+    gap: 15px;
+  }
+
+  .filter-toolbar .el-input {
+    width: 100% !important;
+  }
+
+  .right-tools {
+    justify-content: space-between;
+  }
+
+  .right-tools .el-select {
+    flex: 1;
   }
 }
 </style>
