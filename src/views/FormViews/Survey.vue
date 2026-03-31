@@ -5,14 +5,12 @@
       content="問卷調查頁面"
       style="margin-bottom: 20px"
     />
-
     <el-card class="form-card">
       <template #header>
         <div class="card-header">
           <span>回饋表單資訊</span>
         </div>
       </template>
-
       <el-form
         :model="form"
         label-position="top"
@@ -25,14 +23,12 @@
         >
           <el-input v-model="form.surveyTitle" />
         </el-form-item>
-
         <el-form-item
           label="評分"
           prop="rating"
         >
           <el-input v-model="form.rating" />
         </el-form-item>
-
         <el-form-item label="回饋內容">
           <el-input
             v-model="form.feedback"
@@ -41,7 +37,6 @@
           />
         </el-form-item>
       </el-form>
-
       <div
         style="
           display: flex;
@@ -67,7 +62,6 @@
     </el-card>
   </div>
 </template>
-
 <script setup>
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
@@ -76,19 +70,16 @@ import { useHistoryStore } from "../../stores/history";
 const router = useRouter();
 const formRef = ref(null);
 const historyStore = useHistoryStore();
-
 const form = reactive({
   surveyTitle: "",
   rating: "",
   feedback: "",
 });
-
 const rules = {
   surveyTitle: [{ required: true, message: "請輸入表單標題", trigger: "blur" }],
   rating: [{ required: true, message: "請輸入評分", trigger: "blur" }],
   feedback: [{ required: true, message: "請填寫回饋內容", trigger: "blur" }],
 };
-
 const submitForm = () => {
   formRef.value.validate((valid) => {
     if (valid) {
@@ -98,67 +89,15 @@ const submitForm = () => {
         // ... 其他欄位
         createTime: new Date().toISOString(),
       };
-
       // 直接呼叫 store 的 action
       historyStore.addRecord(newSurvey);
-
       ElMessage.success("送出成功");
       router.push("/about");
     }
   });
 };
-
 const resetForm = () => {
   if (!formRef.value) return;
   formRef.value.resetFields();
 };
 </script>
-
-<style scoped>
-:deep(.el-form-item__content > .el-input),
-:deep(.el-form-item__content > .el-textarea),
-:deep(.el-form-item__content > .el-radio-group) {
-  width: 100%;
-}
-
-.form-buttons-item :deep(.el-form-item__content) {
-  justify-content: center;
-}
-
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-
-.form-card {
-  width: 95%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-@media (max-width: 768px) {
-  .page-wrapper {
-    padding: 15px;
-  }
-
-  .form-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .el-button {
-    width: 100%;
-    margin-left: 0 !important;
-  }
-}
-</style>

@@ -30,7 +30,6 @@
           </el-card>
         </el-col>
       </el-row>
-
       <el-row
         :gutter="20"
         style="margin-top: 20px"
@@ -55,17 +54,14 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed, nextTick } from "vue";
 import { useHistoryStore } from "../../stores/history";
 import * as echarts from "echarts";
 import { User, Setting, Monitor, ChatLineRound } from "@element-plus/icons-vue";
-
 const historyStore = useHistoryStore();
 const pieChartRef = ref(null);
 const lineChartRef = ref(null);
-
 // 計算各類型數量
 const stats = computed(() => {
   const list = historyStore.historyList;
@@ -76,7 +72,6 @@ const stats = computed(() => {
     survey: list.filter((i) => i.type === "survey").length,
   };
 });
-
 const statCards = computed(() => [
   { title: "用戶註冊", count: stats.value.user, icon: User, color: "#409EFF" },
   {
@@ -98,11 +93,9 @@ const statCards = computed(() => [
     color: "#F56C6C",
   },
 ]);
-
 onMounted(async () => {
   // 使用 nextTick 確保 Element Plus 組件的佈局已經完全撐開
   await nextTick();
-
   // 初始化圓餅圖
   const pieChart = echarts.init(pieChartRef.value);
   pieChart.setOption({
@@ -120,7 +113,6 @@ onMounted(async () => {
       },
     ],
   });
-
   // 初始化折線圖
   const lineChart = echarts.init(lineChartRef.value);
   lineChart.setOption({
@@ -133,13 +125,11 @@ onMounted(async () => {
       { data: [12, 19, 15, 22, 30, 10, 15], type: "line", smooth: true },
     ],
   });
-
   // 重要：強制觸獲一次 resize，確保圖表填滿容器
   setTimeout(() => {
     pieChart.resize();
     lineChart.resize();
   }, 100);
-
   // 監聽視窗縮放，否則圖表不會隨頁面大小變動
   window.addEventListener("resize", () => {
     pieChart.resize();
@@ -147,28 +137,3 @@ onMounted(async () => {
   });
 });
 </script>
-
-<style scoped>
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1200px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-.card-content {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-.title {
-  font-size: 14px;
-  color: #909399;
-}
-.count {
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-</style>

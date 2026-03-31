@@ -5,14 +5,12 @@
       content="系統表單頁面"
       style="margin-bottom: 20px"
     />
-
     <el-card class="form-card">
       <template #header>
         <div class="card-header">
           <span>系統表單填寫</span>
         </div>
       </template>
-
       <el-form
         :model="formData"
         label-position="top"
@@ -28,7 +26,6 @@
             placeholder="System Name"
           />
         </el-form-item>
-
         <el-form-item
           label="發生時間: "
           prop="time"
@@ -41,7 +38,6 @@
             value-format="YYYY-MM-DD HH:mm:ss"
           />
         </el-form-item>
-
         <el-form-item
           label="異常問題: "
           prop="problem"
@@ -51,7 +47,6 @@
             placeholder="請輸入問題"
           />
         </el-form-item>
-
         <div
           style="
             display: flex;
@@ -78,7 +73,6 @@
     </el-card>
   </div>
 </template>
-
 <script setup>
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
@@ -92,13 +86,11 @@ const formData = reactive({
   time: "",
   problem: "",
 });
-
 const rules = {
   name: [{ required: true, message: "系統名稱必填", trigger: "blur" }],
   time: [{ required: true, message: "時間必填", trigger: "blur" }],
   problem: [{ required: true, message: "問題必填", trigger: "blur" }],
 };
-
 const submitForm = () => {
   formRef.value.validate((valid) => {
     if (valid) {
@@ -110,77 +102,14 @@ const submitForm = () => {
         sysTime: formData.time,
         createTime: new Date().toISOString(),
       };
-
       historyStore.addRecord(newSys);
-
       ElMessage.success("送出成功");
       router.push("/about");
     }
   });
 };
-
 const resetForm = () => {
   if (!formRef.value) return;
   formRef.value.resetFields();
 };
 </script>
-
-<style scoped>
-:deep(.el-form-item__content > .el-input),
-:deep(.el-form-item__content > .el-textarea),
-:deep(.el-form-item__content > .el-radio-group) {
-  width: 100%;
-  /* 強制所有表單元件寬度一致 */
-}
-
-.form-buttons-item :deep(.el-form-item__content) {
-  justify-content: center;
-  /* 讓按鈕在剩餘空間置中 */
-}
-
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-
-/* FormView.vue 與 SysFormView.vue 修正 */
-.form-card {
-  width: 95%;
-  /* 手機時佔 95% 寬度 */
-  max-width: 800px;
-  /* 電腦時最大 800px */
-  margin: 0 auto;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: center;
-  /* 讓按鈕整體居中 */
-  gap: 15px;
-  /* 按鈕之間的間距 */
-}
-
-@media (max-width: 768px) {
-  .page-wrapper {
-    padding: 15px;
-    /* 手機版減少外層間距 */
-  }
-
-  .form-buttons {
-    flex-direction: column;
-    /* 按鈕變成上下堆疊 */
-    width: 100%;
-  }
-
-  .el-button {
-    width: 100%;
-    /* 讓每個按鈕都佔滿寬度 */
-    margin-left: 0 !important;
-    /* 移除 Element 內建的左間距 */
-  }
-}
-</style>

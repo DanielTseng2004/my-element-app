@@ -5,7 +5,6 @@ import SysFormView from "../views/FormViews/SysFormView.vue";
 import AboutView from "../views/AboutView.vue";
 import DeviceFormView from "../views/FormViews/DeviceFormView.vue";
 import Survey from "../views/FormViews/Survey.vue";
-
 const routes = [
   {
     path: "/",
@@ -44,7 +43,6 @@ const routes = [
     component: AboutView,
   },
 ];
-
 const router = createRouter({
   history: createWebHistory(),
   routes,
@@ -57,5 +55,4 @@ const router = createRouter({
     }
   },
 });
-
 export default router;

@@ -19,7 +19,6 @@
             </el-button>
           </div>
         </template>
-
         <el-table
           :data="historyStore.historyList"
           border
@@ -50,14 +49,11 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { useHistoryStore } from "../../stores/history";
 import * as XLSX from "xlsx";
 import { Download } from "@element-plus/icons-vue";
-
 const historyStore = useHistoryStore();
-
 const downloadExcel = () => {
   // 1. 準備數據
   const data = historyStore.historyList.map((item) => ({
@@ -71,29 +67,11 @@ const downloadExcel = () => {
       item.feedback ||
       "",
   }));
-
   // 2. 建立工作表
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "HistoryReport");
-
   // 3. 下載檔案
   XLSX.writeFile(workbook, `Report_${new Date().getTime()}.xlsx`);
 };
 </script>
-
-<style scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-</style>

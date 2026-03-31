@@ -5,12 +5,10 @@
       content="設備報修申請"
       style="margin-bottom: 20px"
     />
-
     <el-card class="form-card">
       <template #header>
         <div class="card-header"><span>報修資料填寫</span></div>
       </template>
-
       <el-form
         :model="deviceForm"
         :rules="rules"
@@ -26,7 +24,6 @@
             placeholder="例如：PC-2024-001"
           />
         </el-form-item>
-
         <el-form-item
           label="設備類型"
           prop="type"
@@ -54,7 +51,6 @@
             />
           </el-select>
         </el-form-item>
-
         <el-form-item
           label="緊急程度"
           prop="urgency"
@@ -77,7 +73,6 @@
             >
           </el-radio-group>
         </el-form-item>
-
         <el-form-item
           label="故障詳細描述"
           prop="desc"
@@ -89,7 +84,6 @@
             placeholder="請詳細說明故障現象（例如：藍屏、無法通電、缺墨水...）"
           />
         </el-form-item>
-
         <div
           style="
             display: flex;
@@ -116,7 +110,6 @@
     </el-card>
   </div>
 </template>
-
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -125,20 +118,17 @@ import { useHistoryStore } from "../../stores/history";
 const historyStore = useHistoryStore();
 const router = useRouter();
 const deviceFormRef = ref(null);
-
 const deviceForm = reactive({
   id: "",
   type: "",
   urgency: "low",
   desc: "",
 });
-
 const rules = {
   id: [{ required: true, message: "請輸入設備編號", trigger: "blur" }],
   type: [{ required: true, message: "請選擇設備類型", trigger: "change" }],
   desc: [{ required: true, message: "請描述故障問題", trigger: "blur" }],
 };
-
 const submitForm = () => {
   deviceFormRef.value.validate((valid) => {
     if (valid) {
@@ -152,49 +142,14 @@ const submitForm = () => {
         // 建議統一使用 ISO 格式方便排序
         createTime: new Date().toISOString(),
       };
-
       // ✅ 替換掉原本的 localStorage.setItem 邏輯
       historyStore.addRecord(newRecord);
-
       ElMessage.success("報修申請已送出");
       router.push("/about");
     }
   });
 };
-
 const resetForm = () => {
   deviceFormRef.value.resetFields();
 };
 </script>
-
-<style scoped>
-.page-wrapper {
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1000px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-
-.form-card {
-  width: 95%;
-  /* 手機時佔 95% 寬度 */
-  max-width: 800px;
-  /* 電腦時最大 800px */
-  margin: 0 auto;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 30px;
-}
-/* 讓單選框在手機版也能整齊排列 */
-:deep(.el-radio-group) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-</style>

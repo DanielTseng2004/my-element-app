@@ -1,11 +1,13 @@
 <template>
+  <!-- 頁面包裝器 -->
   <div class="page-wrapper">
     <div class="home-wrapper">
+      <!-- 歡迎區域 -->
       <div class="welcome-section">
         <h1>{{ welcomeText }}，管理員</h1>
         <p>今天是 {{ currentDate }}，系統運行正常。</p>
       </div>
-
+      <!-- 統計行 -->
       <el-row
         :gutter="20"
         class="stat-row"
@@ -29,7 +31,7 @@
           </el-card>
         </el-col>
       </el-row>
-
+      <!-- 功能菜單網格 -->
       <div class="menu-grid">
         <el-row :gutter="25">
           <el-col
@@ -63,8 +65,8 @@
     </div>
   </div>
 </template>
-
 <script setup>
+// 引入依賴
 import { computed } from "vue";
 import { useHistoryStore } from "../stores/history";
 import {
@@ -75,16 +77,15 @@ import {
   PieChart,
   List,
 } from "@element-plus/icons-vue";
-
+// 使用store
 const historyStore = useHistoryStore();
-
+// 計算屬性：歡迎文字
 const welcomeText = computed(() => {
   const hour = new Date().getHours();
   return hour < 12 ? "早安" : hour < 18 ? "午安" : "晚安";
 });
-
+// 當前日期
 const currentDate = new Date().toLocaleDateString();
-
 // 簡單統計
 const quickStats = computed(() => [
   {
@@ -105,7 +106,6 @@ const quickStats = computed(() => [
     color: "#f56c6c",
   },
 ]);
-
 // 功能入口
 const menuLinks = [
   {
@@ -152,82 +152,3 @@ const menuLinks = [
   },
 ];
 </script>
-
-<style scoped>
-.page-wrapper {
-  padding: 0;
-  min-height: 100vh;
-  max-width: 1200px;
-  width: 95%;
-  margin: 0 auto;
-  background-color: #f5f7fa;
-}
-.home-wrapper {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.welcome-section {
-  margin-bottom: 40px;
-}
-
-.welcome-section h1 {
-  font-size: 2rem;
-  color: #303133;
-}
-
-.stat-row {
-  margin-bottom: 40px;
-}
-
-.stat-mini-card {
-  text-align: center;
-  border-radius: 12px;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.stat-label {
-  color: #909399;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.menu-card {
-  min-height: 200px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s;
-  margin-bottom: 25px;
-  border-radius: 15px;
-}
-
-.menu-card:hover {
-  transform: translateY(-10px);
-}
-
-.icon-box {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px auto 15px;
-}
-
-.menu-card h3 {
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-.menu-card p {
-  color: #909399;
-  font-size: 13px;
-  padding: 0 10px;
-}
-</style>

@@ -1,4 +1,4 @@
-// src/mock/data.js
+// 模擬歷史記錄數據
 export const mockHistory = [
   {
     id: 247,
