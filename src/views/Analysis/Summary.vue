@@ -41,7 +41,7 @@
             <el-card header="表單類型佔比">
               <div
                 ref="pieChartRef"
-                style="width: 100%; height: 350px"
+                style="width: 100%; height: 350px; color: #ffffff"
               ></div>
             </el-card>
           </el-col>
@@ -49,7 +49,7 @@
             <el-card header="最近提交趨勢">
               <div
                 ref="lineChartRef"
-                style="width: 100%; height: 350px"
+                style="width: 100%; height: 350px; color: #ffffff"
               ></div>
             </el-card>
           </el-col>

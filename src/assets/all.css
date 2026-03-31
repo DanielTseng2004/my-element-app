@@ -11,30 +11,211 @@
   --text-main: #303133;
   --text-secondary: #909399;
   --border-color: #ebeef5;
-  --nav-gradient: linear-gradient(90deg, #409eff 0%, #3a8ee6 100%);
+  --nav-bg: #409eff; /* 改用單一背景色以利過渡 */
   --nav-sub-bg: #3a8ee6;
+  --transition-speed: 0.3s;
 }
 
+/* 柔和深灰色模式優化 (類似 GitHub/VS Code 風格) */
 html.dark {
-  --bg-color: #16171d;
-  --page-bg: #1a1b22;
-  --card-bg: #24252b;
-  --text-main: #f3f4f6;
+  --bg-color: #1a1b1ee8;
+  --page-bg: #1a1b1ef0;
+  --card-bg: #25262b;
+  --text-main: #d1d5db;
   --text-secondary: #9ca3af;
-  --border-color: #2e303a;
-  --nav-gradient: linear-gradient(90deg, #1f2028 0%, #2e303a 100%);
-  --nav-sub-bg: #24252b;
+  --border-color: #373a40;
+  --nav-bg: #25262b;
+  --nav-sub-bg: #25262b;
+
+  /* Element Plus 全域變數覆蓋 */
+  --el-bg-color: #1a1b1e;
+  --el-bg-color-overlay: #25262b;
+  --el-text-color-primary: #d1d5db;
+  --el-text-color-regular: #9ca3af;
+  --el-text-color-secondary: #6b7280;
+  --el-border-color: #373a40;
+  --el-border-color-light: #2c2e33;
+  --el-fill-color-blank: #25262b;
+  --el-fill-color-light: #2c2e33;
+  --el-mask-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 全域過渡優化：確保所有元件同步切換 */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--transition-speed) ease-in-out,
+    border-color var(--transition-speed) ease-in-out,
+    color var(--transition-speed) ease-in-out,
+    box-shadow var(--transition-speed) ease-in-out !important;
+}
+
+/* 強制覆蓋 Element Plus 組件深色模式樣式 */
+html.dark .el-card,
+html.dark .el-table,
+html.dark .el-table tr,
+html.dark .el-table th.el-table__cell,
+html.dark .el-table td.el-table__cell,
+html.dark .el-table__inner-wrapper::before,
+html.dark .el-table__inner-wrapper::after,
+html.dark .el-table__header-wrapper,
+html.dark .el-table__body-wrapper,
+html.dark .el-table__footer-wrapper {
+  background-color: var(--card-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 解決斑馬紋 (Stripe) 導致的黑白相間問題 */
+html.dark
+  .el-table--striped
+  .el-table__body
+  tr.el-table__row--striped
+  td.el-table__cell {
+  background-color: #1f2023 !important;
+}
+
+html.dark
+  .el-table--enable-row-hover
+  .el-table__body
+  tr:hover
+  > td.el-table__cell {
+  background-color: #2c2e33 !important;
+}
+
+html.dark .el-input__wrapper {
+  background-color: #1a1b1e !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+
+html.dark .el-input__inner {
+  color: var(--text-main) !important;
+}
+
+/* 分頁組件 (Pagination) 深色模式優化 */
+html.dark .el-pagination {
+  --el-pagination-bg-color: var(--card-bg) !important;
+  --el-pagination-hover-color: var(--el-color-primary) !important;
+  --el-pagination-button-bg-color: #2c2e33 !important;
+  --el-pagination-button-color: var(--text-main) !important;
+  --el-pagination-button-disabled-bg-color: #1a1b1e !important;
+  --el-pagination-button-disabled-color: #5c5c5c !important;
+}
+
+html.dark .el-pagination button,
+html.dark .el-pagination .el-pager li {
+  background-color: #2c2e33 !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+html.dark .el-pagination .el-pager li.is-active {
+  background-color: var(--el-color-primary) !important;
+  color: white !important;
+  border-color: var(--el-color-primary) !important;
+}
+
+html.dark .el-pagination .el-pager li:hover:not(.is-active) {
+  color: var(--el-color-primary) !important;
+}
+
+html.dark .el-pagination .btn-prev,
+html.dark .el-pagination .btn-next {
+  background-color: #2c2e33 !important;
+  color: var(--text-main) !important;
+}
+
+html.dark .el-pagination__total,
+html.dark .el-pagination__jump {
+  color: var(--text-secondary) !important;
+}
+
+html.dark .el-pagination .el-input__wrapper {
+  background-color: #1a1b1e !important;
+}
+
+/* 返回按鈕 (Page Header Back) 深色模式優化 */
+html.dark .el-page-header__back {
+  color: var(--text-main) !important;
+}
+
+html.dark .el-page-header__back:hover {
+  color: var(--el-color-primary) !important;
+}
+
+html.dark .el-page-header__back .el-icon,
+html.dark .el-page-header__back .el-page-header__title {
+  color: inherit !important;
+}
+
+html.dark .el-page-header__breadcrumb .el-breadcrumb__inner,
+html.dark .el-page-header__breadcrumb .el-breadcrumb__separator {
+  color: var(--text-secondary) !important;
+}
+
+html.dark .el-page-header__content {
+  color: var(--text-main) !important;
+}
+
+/* 全域文字標籤深色模式優化 */
+html.dark p,
+html.dark span,
+html.dark div:not(.el-card):not(.el-table):not(.el-menu) {
+  color: var(--text-main);
+}
+
+html.dark .text-secondary,
+html.dark .stat-label,
+html.dark .footer {
+  color: var(--text-secondary) !important;
+}
+
+/* 狀態標籤 (Tag) 深色模式優化 */
+html.dark .el-tag {
+  --el-tag-bg-color: #2c2e33 !important;
+  --el-tag-border-color: #373a40 !important;
+  --el-tag-text-color: var(--text-main) !important;
+}
+
+html.dark .el-tag--info {
+  --el-tag-bg-color: #2c2e33 !important;
+  --el-tag-border-color: #373a40 !important;
+  --el-tag-text-color: #9ca3af !important;
+}
+
+html.dark .el-tag--success {
+  --el-tag-bg-color: rgba(64, 192, 87, 0.15) !important;
+  --el-tag-border-color: rgba(64, 192, 87, 0.3) !important;
+  --el-tag-text-color: #69db7c !important;
+}
+
+html.dark .el-tag--warning {
+  --el-tag-bg-color: rgba(250, 176, 5, 0.15) !important;
+  --el-tag-border-color: rgba(250, 176, 5, 0.3) !important;
+  --el-tag-text-color: #ffd43b !important;
+}
+
+html.dark .el-tag--danger {
+  --el-tag-bg-color: rgba(250, 82, 82, 0.15) !important;
+  --el-tag-border-color: rgba(250, 82, 82, 0.3) !important;
+  --el-tag-text-color: #ff8787 !important;
+}
+
+html.dark .el-tag--primary {
+  --el-tag-bg-color: rgba(77, 171, 247, 0.15) !important;
+  --el-tag-border-color: rgba(77, 171, 247, 0.3) !important;
+  --el-tag-text-color: #74c0fc !important;
 }
 
 body {
   margin: 0;
   background-color: var(--bg-color);
   font-family: var(--el-font-family);
-  transition: background-color 0.3s;
 }
 
 .nav-header {
-  background: var(--nav-gradient);
+  background-color: var(--nav-bg); /* 改用單一背景色以利過渡 */
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -90,7 +271,8 @@ body {
   margin: 0 auto;
   padding: 20px 20px;
   background-color: var(--page-bg);
-  transition: background-color 0.3s;
+  border-radius: 20px;
+  border: #ffffff solid 1px;
 }
 
 .home-page .page-wrapper {

@@ -22,13 +22,19 @@
             label="使用者姓名"
             prop="name"
           >
-            <el-input v-model="form.name" />
+            <el-input
+              v-model="form.name"
+              placeholder="Name"
+            />
           </el-form-item>
           <el-form-item
             label="聯絡信箱"
             prop="email"
           >
-            <el-input v-model="form.email" />
+            <el-input
+              v-model="form.email"
+              placeholder="Email"
+            />
           </el-form-item>
           <el-form-item
             label="性別"

@@ -53,6 +53,23 @@
           </el-menu-item>
 
           <div class="flex-grow" />
+
+          <el-button
+            circle
+            @click.stop="toggleDarkMode"
+            style="
+              margin: auto;
+              padding: auto;
+              background: transparent;
+              border: 3px solid rgba(255, 255, 255, 0.5);
+              color: white;
+            "
+          >
+            <el-icon :size="18">
+              <Moon v-if="!isDark" />
+              <Sunny v-else />
+            </el-icon>
+          </el-button>
         </el-menu>
       </div>
     </header>
@@ -78,10 +95,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useHistoryStore } from "./stores/history";
-
+import { Moon, Sunny } from "@element-plus/icons-vue";
 import {
   HomeFilled,
   User,
@@ -93,11 +110,20 @@ import {
   Memo,
 } from "@element-plus/icons-vue";
 
+const isDark = ref(false);
 const route = useRoute();
 const historyStore = useHistoryStore();
 
 onMounted(() => {
   historyStore.initHistory();
+  const savedTheme = localStorage.getItem("theme");
+  if (
+    savedTheme === "dark" ||
+    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    isDark.value = true;
+    document.documentElement.classList.add("dark");
+  }
 });
 
 watch(
@@ -106,6 +132,18 @@ watch(
     window.scrollTo({ top: 0, behavior: "smooth" });
   },
 );
+
+const toggleDarkMode = () => {
+  isDark.value = !isDark.value;
+  const html = document.documentElement;
+  if (isDark.value) {
+    html.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+  } else {
+    html.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+  }
+};
 </script>
 
 <style scoped>

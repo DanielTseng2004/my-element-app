@@ -21,19 +21,26 @@
           label="表單標題"
           prop="surveyTitle"
         >
-          <el-input v-model="form.surveyTitle" />
+          <el-input
+            v-model="form.surveyTitle"
+            placeholder="Survey Title"
+          />
         </el-form-item>
         <el-form-item
           label="評分"
           prop="rating"
         >
-          <el-input v-model="form.rating" />
+          <el-input
+            v-model="form.rating"
+            placeholder="Rating"
+          />
         </el-form-item>
         <el-form-item label="回饋內容">
           <el-input
             v-model="form.feedback"
             type="textarea"
             :rows="3"
+            placeholder="Feedback"
           />
         </el-form-item>
       </el-form>
